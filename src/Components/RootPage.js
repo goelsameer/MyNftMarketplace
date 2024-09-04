@@ -5,6 +5,7 @@ import Footer from './Footer.js';
 import React from 'react'
 
 function RootPage() {
+  
   return (
     <>
         <Navbar/>
