@@ -1,8 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './Components/Navbar';
-import UploadNFT from './Components/UploadNft';
+import UploadNFT from './Components/UploadNFT';
 import NftCard from './Components/NftCard';
 import RootPage from './Components/RootPage';
 function App() {
