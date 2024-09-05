@@ -4,6 +4,7 @@ const app=express();
 const cors=require('cors');
 app.use(cors());
 let finalData=[];
+let tokenIdMapPinataUrl={};
 let timestamp=Date.now();
 app.get('/get-nft-data', (req, res) => {
 const currentTime = Date.now();
@@ -58,10 +59,24 @@ function parseData(price){
 }
 return res.json(finalData);
 })
+app.post('/add-to-db',(req,res)=>{
+tokenId=req.tokenId;
+pinataUrl=req.pinataUrl;
+tokenIdMapPinataUrl[tokenId]=pinataUrl;
+return res.json("Success");
+})
+app.get('/get-all-urls',(req,res)=>{
+  const arr=[];
+for(let i=0;i<tokenIdMapPinataUrl.length;i++){
+arr.push(tokenIdMapPinataUrl[i]);
+}
+console.log(arr);
+return res.json(arr);
+})
 
-  app.listen(3004,()=>{
+app.listen(3004,()=>{
     console.log("listening on port 3004")
-  })
+})
 /*
 name
 image.small
