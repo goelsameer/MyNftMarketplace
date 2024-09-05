@@ -98,9 +98,7 @@ const UploadNFT = () => {
                     const formData=new FormData();
                     formData.append("file",nftData.image);
                     const pinataMetaData=JSON.stringify({
-                    name: nftData.title,
-                        price:nftData.price,
-                        description: nftData.description
+                    name: "File name"
                     })
                     formData.append("pinataMetaData",pinataMetaData);
                     const pinataOptions= JSON.stringify({
@@ -117,8 +115,27 @@ const UploadNFT = () => {
                 const response = await request.json();
                 const resUrl=response.IpfsHash;
                 console.log(resUrl);
+                  const metaData={
+                    img:resUrl,
+                    name:nftData.name,
+                    price:nftData.price,
+                    description:nftData.description
+                }
+                    const requestFinal = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${JWT}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(metaData) // Convert your JSON data to a string
+                });
+
+                const result = await requestFinal.json();
+                console.log(result);
+
                 const axiosres=await axios.post('http://localhost:3004/add-to-db',{"tokenId":tokenId,"resUrl":resUrl});
                 console.log(axiosres);
+                
                 const approvalTx = await myNFTContract.approve(transEthAddress, tokenId);
                  await approvalTx.wait();
 
