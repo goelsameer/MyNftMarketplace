@@ -2,10 +2,18 @@ const axios=require('axios');
 const express=require('express');
 const app=express();
 const cors=require('cors');
+const mongoose = require('mongoose');
+const Token = require('./schema');
 app.use(cors());
+app.use(express.json());
 let finalData=[];
-let tokenIdMapPinataUrl={};
 let timestamp=Date.now();
+
+mongoose.connect('mongodb+srv://sameergoelmail:FkAI7GahWDg7kPcv@cluster0.pbzmr.mongodb.net/')
+  .then(() => console.log("MongoDB connected!"))
+  .catch(err => console.log(err));
+
+
 app.get('/get-nft-data', (req, res) => {
 const currentTime = Date.now();
 if ((currentTime - timestamp) < 1500000 &&finalData.length > 0) {
@@ -59,21 +67,63 @@ function parseData(price){
 }
 return res.json(finalData);
 })
-app.post('/add-to-db',(req,res)=>{
-tokenId=req.tokenId;
-pinataUrl=req.pinataUrl;
-tokenIdMapPinataUrl[tokenId]=pinataUrl;
-return res.json("Success");
+app.post('/add-to-db',async (req,res)=>{
+try {
+    const { tokenId, pinataUrl } = req.body;
+    console.log(tokenId, pinataUrl);
+    const newToken = new Token({ tokenId, pinataUrl });
+     console.log("th3ird");
+    await newToken.save();
+    return res.json("Success");
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json("Error saving to database");
+  }
 })
-app.get('/get-all-urls',(req,res)=>{
-  const arr=[];
-for(let i=0;i<tokenIdMapPinataUrl.length;i++){
-arr.push(tokenIdMapPinataUrl[i]);
-}
-console.log(arr);
-return res.json(arr);
+app.get('/get-all-urls',async (req,res)=>{
+   try {
+     const tokens = await Token.find({}, 'tokenId pinataUrl -_id'); // Get both tokenId and pinataUrl
+      console.log(tokens);
+      return res.json(tokens);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json("Error retrieving data");
+  }
 })
 
+app.get('/get-specific-data/:params', async (req, res) => {
+  let { params } = req.params;
+  params=params+"";
+  try {
+    const data = await Token.findOne({ tokenId:params });
+
+    if (!data) {
+      return res.json({
+    imageUrl: "",
+    name: 'Unique NFT Art',
+    title: 'The Artistic Masterpiece',
+    price: '2.5'});
+    }
+    console.log(data);
+    res.status(200).json(data);
+  } catch (error) {
+    // Handle errors
+    res.status(500).json({ message: 'Error fetching data', error });
+  }
+});
+app.post('/sold/:tokenId', async (req, res) => {
+  try {
+    console.log(req.params.tokenId); // Access tokenId correctly from req.params
+    const data = await Token.findOneAndDelete({ tokenId: req.params.tokenId });
+    if (!data) {
+      return res.json("Not found");
+    }
+    res.status(200).json(data);
+  } catch (error) {
+    // Handle errors
+    res.status(500).json({ message: 'Error fetching data', error });
+  }
+});
 app.listen(3004,()=>{
     console.log("listening on port 3004")
 })
@@ -83,4 +133,8 @@ image.small
 floor_price.native_currency
 native_currency_symbol
 volume_24h.native_currency
+ */
+
+/*
+mongodb+srv://sameergoelmail:<db_password>@cluster0.pbzmr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
  */

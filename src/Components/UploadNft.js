@@ -13,7 +13,7 @@ const UploadNFT = () => {
         image: null,
         title: "",
         description: "",
-        price: "1", // Default to 1 ETH or set appropriately
+        price: "1",
     });
 
     const handleChange = (e) => {
@@ -117,7 +117,7 @@ const UploadNFT = () => {
                 console.log(resUrl);
                   const metaData={
                     img:resUrl,
-                    name:nftData.name,
+                    name:nftData.title,
                     price:nftData.price,
                     description:nftData.description
                 }
@@ -133,7 +133,9 @@ const UploadNFT = () => {
                 const result = await requestFinal.json();
                 console.log(result);
 
-                const axiosres=await axios.post('http://localhost:3004/add-to-db',{"tokenId":tokenId,"resUrl":resUrl});
+                const axiosres=await axios.post('http://localhost:3004/add-to-db',{ 
+                "tokenId": tokenId,
+                "pinataUrl": result.IpfsHash});
                 console.log(axiosres);
                 
                 const approvalTx = await myNFTContract.approve(transEthAddress, tokenId);

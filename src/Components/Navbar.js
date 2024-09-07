@@ -2,7 +2,7 @@ import React from 'react'
 import { useState,useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-
+import {ethers} from "ethers"
 function Navbar() {
   const navigate=useNavigate();
   return (
@@ -70,7 +70,7 @@ function Navbar() {
                 <path d="M12 22c4.411 0 8-3.589 8-8s-3.589-8-8-8-8 3.589-8 8 3.589 8 8 8zm0-2c-3.313 0-6-2.687-6-6s2.687-6 6-6 6 2.687 6 6-2.687 6-6 6zm0-10c-.554 0-1 .446-1 1v3c0 .553.446 1 1 1s1-.447 1-1v-3c0-.554-.446-1-1-1zm0-2c.552 0 1-.447 1-1s-.448-1-1-1-1 .447-1 1 .448 1 1 1z" />
               </svg>
             </button>
-            <button className="bg-gray-200/50 backdrop-blur-lg text-white px-3 py-1 rounded-full">
+            <button className="bg-gray-200/50 backdrop-blur-lg text-white px-3 py-1 rounded-full" onClick={async()=>{await withdrawFunds()}}>
               <svg
                 className="h-5 w-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -135,5 +135,36 @@ function MintingButton(){
       <span className="text-white font-semibold">Minting now</span>
     </button>
   );
+}
+
+async function withdrawFunds(){
+  if(typeof window.ethereum !== undefined){
+    const account=await window.ethereum.request({method:"eth_requestAccounts"});
+    const provider=new ethers.providers.Web3Provider(window.ethereum);
+    // const priceinWei= ethers.utils.parseEther(price.toString());
+    const signer=provider.getSigner();
+    const transEthAddress = "0xf5E36Fc62DB51e99e8A8980EA4199C60615dDB6a";
+     const transEthAbi = [{
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "buyNFT",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },  {
+      "inputs": [],
+      "name": "withdrawFunds",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },];
+    const transEthContract=new ethers.Contract(transEthAddress,transEthAbi,signer);
+    transEthContract.withdrawFunds();
+  }
 }
 export default Navbar
