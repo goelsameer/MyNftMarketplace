@@ -1,12 +1,8 @@
-/*
-Pinata Api key=77d76b85dfa484e5b9de
-Pinata Api secret=e9f3f4c1032e97453ca4762f3d2cbda6369322e6d48ebee1402224b78ef96814
-Pinata jwt secret=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJhOTgxNjk2MS1lMzgzLTQxZTMtOTA0NS1iZmZjZTkxNWI4MGUiLCJlbWFpbCI6InNhbWVlcmdvZWxtYWlsQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI3N2Q3NmI4NWRmYTQ4NGU1YjlkZSIsInNjb3BlZEtleVNlY3JldCI6ImU5ZjNmNGMxMDMyZTk3NDUzY2E0NzYyZjNkMmNiZGE2MzY5MzIyZTZkNDhlYmVlMTQwMjIyNGI3OGVmOTY4MTQiLCJleHAiOjE3NTcwNzY1MjV9.S6VX64l6L2pZI3ZWIz6wM2F6fv2fUNrVgwH6sPRABOY
- */
 import { React, useState } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
-const JWT="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJhOTgxNjk2MS1lMzgzLTQxZTMtOTA0NS1iZmZjZTkxNWI4MGUiLCJlbWFpbCI6InNhbWVlcmdvZWxtYWlsQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI3N2Q3NmI4NWRmYTQ4NGU1YjlkZSIsInNjb3BlZEtleVNlY3JldCI6ImU5ZjNmNGMxMDMyZTk3NDUzY2E0NzYyZjNkMmNiZGE2MzY5MzIyZTZkNDhlYmVlMTQwMjIyNGI3OGVmOTY4MTQiLCJleHAiOjE3NTcwNzY1MjV9.S6VX64l6L2pZI3ZWIz6wM2F6fv2fUNrVgwH6sPRABOY";
+import { useNavigate } from "react-router-dom";
+console.log(process.env.REACT_APP_Pinata_jwt_secret);
 const UploadNFT = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [nftData, setNftData] = useState({
@@ -15,7 +11,7 @@ const UploadNFT = () => {
         description: "",
         price: "1",
     });
-
+    const navigate=useNavigate();
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         if (name === "image") {
@@ -108,7 +104,7 @@ const UploadNFT = () => {
                     const request = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
                 method: "POST",
                 headers: {
-                    Authorization: `Bearer ${JWT}`
+                    Authorization: `Bearer ${process.env.REACT_APP_Pinata_jwt_secret}`
                 },
                 body: formData,
                 });
@@ -124,7 +120,7 @@ const UploadNFT = () => {
                     const requestFinal = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
                     method: "POST",
                     headers: {
-                        "Authorization": `Bearer ${JWT}`,
+                        "Authorization": `Bearer ${process.env.REACT_APP_Pinata_jwt_secret}`,
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify(metaData) // Convert your JSON data to a string
@@ -150,6 +146,7 @@ const UploadNFT = () => {
                 await txList.wait();
 
                 alert(`NFT with token ID ${tokenId} has been listed for ${nftData.price} ETH!`);
+                navigate('/');
             } else {
                 console.error('MetaMask is not installed!');
             }

@@ -9,7 +9,7 @@ app.use(express.json());
 let finalData=[];
 let timestamp=Date.now();
 
-mongoose.connect('mongodb+srv://sameergoelmail:FkAI7GahWDg7kPcv@cluster0.pbzmr.mongodb.net/')
+mongoose.connect(process.env.MongoDB_URI)
   .then(() => console.log("MongoDB connected!"))
   .catch(err => console.log(err));
 
@@ -21,7 +21,6 @@ if ((currentTime - timestamp) < 1500000 &&finalData.length > 0) {
 }
 finalData=[];
 timestamp=Date.now();
-console.log("i am here");
 const nftIds = ['cryptopunks', 'bored-ape-yacht-club', 'mutant-ape-yacht-club', 'meebits', 'kanpai-pandas', 'cool-cats', 'world-of-women', 'cryptoadz', 'pudgy-penguins', 'deadfellaz'];
   const options = {
     headers: {
@@ -57,9 +56,8 @@ const nftIds = ['cryptopunks', 'bored-ape-yacht-club', 'mutant-ape-yacht-club', 
 })
 function parseData(price){
   let val = price.split('.');
-    let finalPrice = val[0]; // Start with the whole number part
+    let finalPrice = val[0]; 
     if (val.length > 1) {
-        // Add the first two digits of the decimal part if it exists
         finalPrice += finalPrice+'.'+val[1].slice(0, 2);
     }
 
@@ -70,9 +68,7 @@ return res.json(finalData);
 app.post('/add-to-db',async (req,res)=>{
 try {
     const { tokenId, pinataUrl } = req.body;
-    console.log(tokenId, pinataUrl);
     const newToken = new Token({ tokenId, pinataUrl });
-     console.log("th3ird");
     await newToken.save();
     return res.json("Success");
   } catch (error) {
@@ -82,8 +78,7 @@ try {
 })
 app.get('/get-all-urls',async (req,res)=>{
    try {
-     const tokens = await Token.find({}, 'tokenId pinataUrl -_id'); // Get both tokenId and pinataUrl
-      console.log(tokens);
+     const tokens = await Token.find({}, 'tokenId pinataUrl -_id'); 
       return res.json(tokens);
   } catch (error) {
     console.error(error);
@@ -104,37 +99,22 @@ app.get('/get-specific-data/:params', async (req, res) => {
     title: 'The Artistic Masterpiece',
     price: '2.5'});
     }
-    console.log(data);
     res.status(200).json(data);
   } catch (error) {
-    // Handle errors
     res.status(500).json({ message: 'Error fetching data', error });
   }
 });
 app.post('/sold/:tokenId', async (req, res) => {
   try {
-    console.log(req.params.tokenId); // Access tokenId correctly from req.params
     const data = await Token.findOneAndDelete({ tokenId: req.params.tokenId });
     if (!data) {
       return res.json("Not found");
     }
     res.status(200).json(data);
   } catch (error) {
-    // Handle errors
     res.status(500).json({ message: 'Error fetching data', error });
   }
 });
 app.listen(3004,()=>{
     console.log("listening on port 3004")
 })
-/*
-name
-image.small
-floor_price.native_currency
-native_currency_symbol
-volume_24h.native_currency
- */
-
-/*
-mongodb+srv://sameergoelmail:<db_password>@cluster0.pbzmr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
- */

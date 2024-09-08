@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://sameergoelmail:FkAI7GahWDg7kPcv@cluster0.pbzmr.mongodb.net/')
+require('dotenv').config();
 
 const tokenSchema = new mongoose.Schema({
   tokenId: { type: String, required: true },

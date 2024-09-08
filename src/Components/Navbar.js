@@ -9,11 +9,13 @@ function Navbar() {
   const navigate=useNavigate();
   const [walletAddress, setWalletAddress] = useState('');
   const [isConnected, setIsConnected] = useState(false);
-  // Connect wallet function
-  const imgs=["https://fly.storage.tigris.dev/pai-images/84112cc2c13d4bd4985f4cfae04d07b3.jpeg","https://wallpapers.com/images/hd/sad-pikachu-pokemon-4k-n2hucv3erxl2cyjl.jpg","https://lightroom-photoshop-tutorials.com/wp-content/uploads/2021/10/The-Metaverse-City_-A-Hub-of-NFT-Culture-and-Interaction.webp","https://e0.pxfuel.com/wallpapers/9/451/desktop-wallpaper-nft-monkey.jpg"]
-  let ctr=0;
-   const [currentImg, setCurrentImg] = useState(imgs[0]);
-  const [nextImg, setNextImg] = useState(imgs[1]); // Initialize with the second image
+  
+  const imgs=["https://fly.storage.tigris.dev/pai-images/84112cc2c13d4bd4985f4cfae04d07b3.jpeg",
+              "https://wallpapers.com/images/hd/sad-pikachu-pokemon-4k-n2hucv3erxl2cyjl.jpg",
+              "https://lightroom-photoshop-tutorials.com/wp-content/uploads/2021/10/The-Metaverse-City_-A-Hub-of-NFT-Culture-and-Interaction.webp",
+              "https://e0.pxfuel.com/wallpapers/9/451/desktop-wallpaper-nft-monkey.jpg"]
+  const [currentImg, setCurrentImg] = useState(imgs[0]);
+  const [nextImg, setNextImg] = useState(imgs[1]); 
   const [isFading, setIsFading] = useState(false);
 
 
@@ -21,20 +23,22 @@ function Navbar() {
   //its demounted causing a glimpse of new image for a split second
   useEffect(() => {
     const intervalId = setInterval(() => {
-      
-      setIsFading(true); // Start fade-out effect
-     let ids= setTimeout(() => {
+      setIsFading(true); 
+
+      let ids= setTimeout(() => {
       setIsFading(false);
-       setCurrentImg(nextImg);
-       setNextImg(imgs[(imgs.indexOf(nextImg) + 1) % imgs.length]);
+      setCurrentImg(nextImg);
+      setNextImg(imgs[(imgs.indexOf(nextImg) + 1) % imgs.length]);
       }, 0);
-      return ()=> clearTimeout(ids); // Delay to match fade-out time
-    }, 3500);
- return () => clearInterval(intervalId);
-  }, [nextImg]);
-  const connectWallet = async () => {
+
+      return ()=> clearTimeout(ids); 
+
+      }, 3500);
+      return () => clearInterval(intervalId);
+      }, [nextImg]);
+
+    const connectWallet = async () => {
     try {
-      // Check if MetaMask is installed
       if (window.ethereum) {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const accounts = await provider.send("eth_requestAccounts", []);
@@ -49,10 +53,6 @@ function Navbar() {
     }
   };
 
-  const disconnectWallet = () => {
-    setWalletAddress('');
-    setIsConnected(false);
-  };
 
   return (
     <>
@@ -89,31 +89,9 @@ function Navbar() {
           </div>
         </div>
 
-         {/* Right side - Search and Icons */}
+         {/* Right side - Icons */}
         <div className="flex items-center space-x-4">
-          {/* Search */}
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search"
-              className="bg-gray-200/50 backdrop-blur-lg text-white px-4 py-1 rounded-full pl-8"
-            />
-            <div className="absolute left-2 top-1/2 transform -translate-y-1/2">
-              <svg
-                className="h-4 w-4 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M12.9 14.32a7 7 0 111.414-1.414l3.386 3.387a1 1 0 11-1.414 1.414l-3.387-3.386zM14 9a5 5 0 10-10 0 5 5 0 0010 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-    
+          
           {/* Icons */}
           <div className="flex space-x-2">
             <button className="bg-gray-200/50 backdrop-blur-lg text-white px-3 py-1 rounded-full" >
@@ -162,10 +140,29 @@ function Navbar() {
 
         {/* Featured Item */}
        <div className="relative rounded-lg p-6 flex flex-col md:flex-row items-center overflow-hidden" style={{height:"454px"}}>
-  <div className={`absolute inset-0 bg-cover bg-center transition-opacity duration-500 hover:scale-105 ease-in-out ${isFading ? 'opacity-0' : 'opacity-100'}`}
+  <div className={`absolute inset-0 bg-cover bg-center transition-transform duration-500 hover:scale-105 hover:cursor-pointer ease-in-out ${isFading ? 'opacity-0' : 'opacity-100'}`}
   style={{backgroundImage:`url(${currentImg})`}}></div>
-    <div className={`absolute inset-0 bg-cover bg-center transition-opacity duration-500 hover:scale-105 ease-in-out ${isFading ? 'opacity-100' : 'opacity-0'}`}
-  style={{backgroundImage:`url(${nextImg})`}}></div>
+    {/* <div className={`absolute inset-0 bg-cover bg-center transition-opacity duration-500 hover:scale-105 hover:cursor-pointer ease-in-out ${isFading ? 'opacity-100' : 'opacity-0'}`}
+  style={{backgroundImage:`url(${nextImg})`}}></div> */}
+  {/* Another way to do this
+  <div
+  className="relative w-full h-full overflow-hidden hover:scale-105 hover:cursor-pointer transition-transform duration-500 ease-in-out"
+>
+  <div
+    className={`absolute inset-0 bg-cover bg-center transition-opacity duration-500 ease-in-out ${
+      isFading ? 'opacity-0' : 'opacity-100'
+    }`}
+    style={{ backgroundImage: `url(${currentImg})` }}
+  ></div>
+  
+  <div
+    className={`absolute inset-0 bg-cover bg-center transition-opacity duration-500 ease-in-out ${
+      isFading ? 'opacity-100' : 'opacity-0'
+    }`}
+    style={{ backgroundImage: `url(${nextImg})` }}
+  ></div>
+</div>
+   */}
   <div className="relative md:w-2/3 md:pl-6" style={{marginTop:"9rem"}}>
     <h1 className="text-4xl font-bold text-white text-left mt-9">ElmonX x Patrick Hughes Atticked (2024)</h1>
     <p className="text-white text-left font-semibold py-1">By ElmonX</p>
@@ -194,6 +191,10 @@ function MintingButton(){
 }
 
 async function withdrawFunds(){
+   if(window.ethereum ==undefined){
+  alert("Please connect your wallet!!!");
+    return;
+   }
   if(typeof window.ethereum !== undefined){
     const account=await window.ethereum.request({method:"eth_requestAccounts"});
     const provider=new ethers.providers.Web3Provider(window.ethereum);
@@ -220,7 +221,20 @@ async function withdrawFunds(){
       "type": "function"
     },];
     const transEthContract=new ethers.Contract(transEthAddress,transEthAbi,signer);
-    transEthContract.withdrawFunds();
+    
+    try{const tx=await transEthContract.withdrawFunds();
+      await tx.wait();
+      transEthContract.on('FundsWithdrawn', (seller, amount) => {
+    alert(`Funds withdrawn by ${seller}, amount: ${ethers.utils.formatEther(amount)} ETH`);
+  });
+    }catch(error ){
+   if (error.code === ethers.errors.CALL_EXCEPTION) {
+      alert('Sorry, you do not have any funds to withdraw.');
+    } else {
+      console.error("Withdrawal error:", error);
+      alert('An unexpected error occurred.');
+    }
+    }
   }
 }
 export default Navbar

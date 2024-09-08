@@ -140,7 +140,7 @@ const navigate=useNavigate();
     hover:-translate-y-1 hover:shadow-elevation-2
   `}
   style={{ padding: '0', minWidth: '265px', maxWidth: '265px', minHeight: '280px', maxHeight: '280px' }}
->            <img src={item.id!="adssaddadfsa"?item.img:"https://i.seadn.io/s/raw/files/319800f49a79b346c3016b5f184bdb96.png?auto=format&dpr=1&h=500&fr=1"} alt={item.name} className="w-full rounded-lg mb-4 object-cover h-44" onClick={() =>navigate(`/nftCard?params=${item.id}`)}/>
+>            <img src={item.id!="adssaddadfsa"?item.img:"https://i.seadn.io/s/raw/files/319800f49a79b346c3016b5f184bdb96.png?auto=format&dpr=1&h=500&fr=1"} alt={item.name} className="w-full rounded-lg mb-4 object-cover h-44 hover:cursor-pointer" onClick={() =>type=='music'||type=='Art'? alert('This nft is not listed for sale') : navigate(`/nftCard?params=${item.id}`)}/>
             <div className='px-4'>
             <h3 className="text-left text-lg font-semibold mb-2">{item.name} </h3>
             <div className="flex justify-between text-sm text-gray-400">

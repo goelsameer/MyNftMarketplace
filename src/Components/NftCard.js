@@ -1,8 +1,9 @@
 import {React,useState,useEffect} from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { ethers } from "ethers";
  function NFTCard() {
+   const navigate=useNavigate();
   const location = useLocation();
   const [Token,setToken]=useState(0);
   const [nft,setnft]=useState({
@@ -31,12 +32,12 @@ import { ethers } from "ethers";
       <img src={nft.imageUrl} alt={nft.name} className="w-full h-64 object-cover" />
       <div className="p-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">{nft.title}</h2>
-        <p className="text-lg text-gray-600 mb-4">By: {nft.name}</p>
+        <p className="text-lg text-gray-600 mb-4"> {nft.name}</p>
         <div className="flex justify-between items-center mb-4">
           <span className="text-xl font-semibold text-green-600">{nft.price} ETH</span>
           <span className="text-sm text-gray-500">Current Price</span>
         </div>
-        <button onClick={async ()=>{await purchase(Token,nft.price)}}className="w-full bg-gradient-to-r from-green-400 to-green-500 text-white py-3 rounded-lg font-semibold hover:from-green-500 hover:to-green-600 transition-colors duration-300">
+        <button onClick={async ()=>{await purchase(Token,nft.price,navigate)}}className="w-full bg-gradient-to-r from-green-400 to-green-500 text-white py-3 rounded-lg font-semibold hover:from-green-500 hover:to-green-600 transition-colors duration-300">
           Buy Now
         </button>
       </div>
@@ -44,7 +45,7 @@ import { ethers } from "ethers";
     </div>
   );
 }
-async function purchase(tokenId,price){
+async function purchase(tokenId,price,navigate){
   console.log(tokenId);
   if(typeof window.ethereum !== undefined){
     const accounts=await window.ethereum.request({method:"eth_requestAccounts"});
@@ -68,13 +69,17 @@ async function purchase(tokenId,price){
     }];
     
     const transEthContract = new ethers.Contract(transEthAddress, transEthAbi, signer);
-    const order = await transEthContract.buyNFT(tokenId, { value: priceInWei });
+    try{const order = await transEthContract.buyNFT(tokenId, { value: priceInWei });
     const receipt = await order.wait();
     console.log(receipt);
+      alert(`NFT Purchased Successfully!`);
+      navigate('/');}catch(error){
+           console.error("Purchase error:", error);
+    alert('An error occurred while trying to purchase the NFT.');
+      }
     //remove nft from the marketplace
      await axios.post(`http://localhost:3004/sold/${tokenId}`);
-  }
-}
+  }}
 async function fetchAndConvertData(val){
   // console.log(val);
   if(val.name=="Unique NFT Art"){

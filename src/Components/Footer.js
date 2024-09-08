@@ -6,7 +6,6 @@ function Footer() {
     <div>
          <div className={`${theme === 'white'?'bg-blue-500':'bg-black'} text-white py-10`}>
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center space-y-8 sm:space-y-0 sm:flex-row sm:space-x-8">
-        {/* Stay in the Loop Section */}
         <div className="w-full sm:w-1/3 text-center sm:text-left">
           <h3 className="text-lg font-bold">Stay in the loop</h3>
           <p className="text-sm my-4">
@@ -27,7 +26,6 @@ function Footer() {
           </form>
         </div>
 
-        {/* Join the Community Section */}
         <div className="w-full sm:w-1/3 text-center">
           <h3 className="text-lg font-bold">Join the community</h3>
           <div className="flex justify-center mt-4 space-x-4">
@@ -50,7 +48,6 @@ function Footer() {
           </div>
         </div>
 
-        {/* Need Help Section */}
         <div className="w-full sm:w-1/3 text-center sm:text-right">
           <h3 className="text-lg font-bold">Need help?</h3>
           <button className="bg-blue-700 hover:bg-blue-600 px-4 py-2 mt-4 rounded-lg">
