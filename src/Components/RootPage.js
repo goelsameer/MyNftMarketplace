@@ -5,6 +5,7 @@ import Footer from './Footer.js';
 import React from 'react'
 import { ethers } from "ethers";
 import { useEffect } from 'react';
+import { ThemeProvider } from './ThemeContext'; 
 function RootPage() {
   useEffect(() => {
         const init = async () => {
@@ -260,10 +261,12 @@ function RootPage() {
     }, []);
   return (
     <>
+        <ThemeProvider>
         <Navbar/>
         <MiddleSection/>
         <ShowNft/>
         <Footer/>
+        </ThemeProvider>
     </>
   )
 }

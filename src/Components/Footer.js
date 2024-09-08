@@ -1,9 +1,10 @@
-import React from 'react'
-
+import React, {useContext}from 'react'
+import { ThemeContext } from './ThemeContext'
 function Footer() {
+  const {theme,colorChange}=useContext(ThemeContext);
   return (
     <div>
-         <div className="bg-blue-500 text-white py-10">
+         <div className={`${theme === 'white'?'bg-blue-500':'bg-black'} text-white py-10`}>
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center space-y-8 sm:space-y-0 sm:flex-row sm:space-x-8">
         {/* Stay in the Loop Section */}
         <div className="w-full sm:w-1/3 text-center sm:text-left">

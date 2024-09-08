@@ -1,94 +1,106 @@
-import React from 'react'
-import { useState,useEffect } from 'react';
-import  axios  from 'axios';
+import React, { useState, useEffect,useContext } from 'react';
+import axios from 'axios';
+import { ThemeContext } from './ThemeContext'
 function MiddleSection() {
-      const [active, setActive] = useState('Trending');
-  const [nftData,setnftData]=useState('');
-    useEffect(()=>{
-    async function fetchData(){
- const result=await axios.get('http://localhost:3004/get-nft-data');
- const val=result.data;
-    // console.log(val);
-    setnftData(val.map(item => JSON.parse(item)));
-    console.log(nftData);
+  const [active, setActive] = useState('Trending');
+  const [nftData, setNftData] = useState('');
+  const {theme,colorChange}= useContext(ThemeContext);
+  // Automatically set theme based on the time
+
+  // Fetch NFT data from API
+  useEffect(() => {
+    async function fetchData() {
+      const result = await axios.get('http://localhost:3004/get-nft-data');
+      const val = result.data;
+      setNftData(val.map(item => JSON.parse(item)));
     }
     fetchData();
-  },[]);
+  }, []);
+
   return (
-<div className="flex items-start mb-6 flex-col mt-20">
-  <div>
-    <div className="inline-flex bg-gray-100 rounded-lg p-1 shadow-lg mt-10 ml-6">
-      <button
-        onClick={() => setActive('Trending')}
-        className={`${
-          active === 'Trending'
-            ? 'bg-white text-black shadow-md'
-            : 'text-gray-500'
-        } px-4 py-2 rounded-lg font-semibold focus:outline-none`}
-      >
-        Trending
-      </button>
-      <button
-        onClick={() => setActive('Top')}
-        className={`${
-          active === 'Top' ? 'bg-white text-black shadow-md' : 'text-gray-500'
-        } px-4 py-2 rounded-lg font-semibold focus:outline-none`}
-      >
-        Top
-      </button>
-    </div>
-  </div>
-  <div className='flex w-full'>
- <NftTitle/>
- <NftTitle/>
- </div>
- <div className='flex flex-wrap'>
-   {Array.from({ length: nftData.length }, (_, index) => (
-        <TrendingItem key={index} rank={index+1} image={nftData[index].img} name={nftData[index].name} floorPrice={nftData[index].floorPrice} volume={nftData[index].volume}/>
-      ))}
+    <div className={`flex items-start flex-col m-0 pt-20 ${theme === 'black' ? 'bg-black text-white' : 'bg-white text-black'}`}>
+      <div>
+        <div className="inline-flex bg-gray-100 rounded-lg p-1 shadow-lg mt-10 ml-6">
+          <button
+            onClick={() => setActive('Trending')}
+            className={`${
+              active === 'Trending'
+                ? 'bg-white text-black shadow-md'
+                : 'text-gray-500'
+            } px-4 py-2 rounded-lg font-semibold focus:outline-none`}
+          >
+            Trending
+          </button>
+          <button
+            onClick={() => setActive('Top')}
+            className={`${
+              active === 'Top' ? 'bg-white text-black shadow-md' : 'text-gray-500'
+            } px-4 py-2 rounded-lg font-semibold focus:outline-none`}
+          >
+            Top
+          </button>
+        </div>
       </div>
-</div>
-  )
+
+      <div className="flex w-full">
+        <NftTitle theme={theme} />
+        <NftTitle theme={theme} />
+      </div>
+
+      <div className="flex flex-wrap">
+        {Array.from({ length: nftData.length }, (_, index) => (
+          <TrendingItem
+            key={index}
+            rank={index + 1}
+            image={nftData[index].img}
+            name={nftData[index].name}
+            floorPrice={nftData[index].floorPrice}
+            volume={nftData[index].volume}
+            theme={theme}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
-const TrendingItem = ({ rank, image, name, floorPrice, volume }) => {
+
+const TrendingItem = ({ rank, image, name, floorPrice, volume, theme }) => {
   return (
-     <div className="w-1/2">
+    <div className="w-1/2">
       <CryptoItem
         rank={rank}
-        imageUrl={image} // Replace with your image URL
+        imageUrl={image}
         title={name}
         isVerified={true}
         price={floorPrice}
         change={volume}
+        theme={theme}
       />
     </div>
   );
 };
-function NftTitle(){
+
+function NftTitle({ theme }) {
   return (
-      <div className="w-1/2 py-6 px-6" >
-      <div className="flex justify-start text-gray-600 font-medium">
-        <div className="">Rank</div>
+    <div className="w-1/2 py-6 px-6">
+      <div className={`flex justify-start ${theme === 'black' ? 'text-gray-300' : 'text-gray-600'} font-medium`}>
+        <div>Rank</div>
         <div className="w-1/6">Collection</div>
-        <div className="w-3/5"></div> {/* This adds space between Collection and Floor Price */}
+        <div className="w-3/5"></div>
         <div className="w-1/6">Floor Price</div>
         <div className="w-1/6">Volume</div>
       </div>
       <hr className="mt-2 border-gray-300" />
     </div>
-  )
+  );
 }
-const CryptoItem = ({ rank, imageUrl, title, isVerified, price, change }) => {
+
+const CryptoItem = ({ rank, imageUrl, title, isVerified, price, change, theme }) => {
   return (
     <div className="flex items-center justify-between py-5 px-10 mr-6">
       <div className="flex items-center space-x-8">
-        {/* Ranking Number */}
         <span className="text-lg font-semibold">{rank}</span>
-
-        {/* Image */}
         <img src={imageUrl} alt={title} className="w-12 h-12 rounded-md h-16 w-16" />
-
-        {/* Title with Verified Icon */}
         <div className="flex items-center space-x-1">
           <span className="text-lg font-semibold">{title}</span>
           {isVerified && (
@@ -107,13 +119,12 @@ const CryptoItem = ({ rank, imageUrl, title, isVerified, price, change }) => {
           )}
         </div>
       </div>
-
-      {/* Price and Percentage Change */}
       <div className="flex items-center space-x-8">
         <span className="text-lg font-semibold relative right-3">{price} ETH</span>
-        <span className="text-lg font-semibold text-green-500">{change}</span>
+        <span className={`text-lg font-semibold ${theme === 'black' ? 'text-green-500' : 'text-green-600'}`}>{change}</span>
       </div>
     </div>
   );
 };
-export default MiddleSection
+
+export default MiddleSection;
