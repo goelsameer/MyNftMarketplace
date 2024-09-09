@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+/*Hello i am here */
 const AddNewNft = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [nftData, setNftData] = useState({

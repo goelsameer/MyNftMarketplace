@@ -73,12 +73,13 @@ async function purchase(tokenId,price,navigate){
     const receipt = await order.wait();
     console.log(receipt);
       alert(`NFT Purchased Successfully!`);
-      navigate('/');}catch(error){
+      navigate('/');
+      await axios.post(`https://nftmarketplace-backend-3.onrender.com/sold/${tokenId}`);
+    }catch(error){
            console.error("Purchase error:", error);
     alert('An error occurred while trying to purchase the NFT.');
       }
     //remove nft from the marketplace
-     await axios.post(`https://nftmarketplace-backend-3.onrender.com/sold/${tokenId}`);
   }}
 async function fetchAndConvertData(val){
   // console.log(val);
