@@ -10,7 +10,7 @@ function MiddleSection() {
   // Fetch NFT data from API
   useEffect(() => {
     async function fetchData() {
-      const result = await axios.get('http://localhost:3004/get-nft-data');
+      const result = await axios.get('https://nftmarketplace-backend-3.onrender.com/get-nft-data');
       const val = result.data;
       setNftData(val.map(item => JSON.parse(item)));
     }

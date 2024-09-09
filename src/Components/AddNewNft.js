@@ -128,7 +128,7 @@ const AddNewNft = () => {
                 const result = await requestFinal.json();
                 console.log(result);
 
-                const axiosres=await axios.post('http://localhost:3004/add-to-db',{ 
+                const axiosres=await axios.post('https://nftmarketplace-backend-3.onrender.com/add-to-db',{ 
                 "tokenId": tokenId,
                 "pinataUrl": result.IpfsHash});
                 console.log(axiosres);

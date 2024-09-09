@@ -19,7 +19,7 @@ import { ethers } from "ethers";
 
   useEffect(()=>{
     const fetchData=async ()=>{
-     const res=await axios.get(`http://localhost:3004/get-specific-data/${params}`);
+     const res=await axios.get(`https://nftmarketplace-backend-3.onrender.com/get-specific-data/${params}`);
      console.log(res.data);
      setToken(res.data.tokenId);
      setnft(await fetchAndConvertData(res.data.pinataUrl));
@@ -78,7 +78,7 @@ async function purchase(tokenId,price,navigate){
     alert('An error occurred while trying to purchase the NFT.');
       }
     //remove nft from the marketplace
-     await axios.post(`http://localhost:3004/sold/${tokenId}`);
+     await axios.post(`https://nftmarketplace-backend-3.onrender.com/sold/${tokenId}`);
   }}
 async function fetchAndConvertData(val){
   // console.log(val);

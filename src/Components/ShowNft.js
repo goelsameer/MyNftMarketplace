@@ -15,7 +15,7 @@ function ShowNft() {
 }
 
 async function fetchAndConvertData(){
- const response=await axios.get('http://localhost:3004/get-all-urls');
+ const response=await axios.get('https://nftmarketplace-backend-3.onrender.com/get-all-urls');
  const res=response.data;
  const data=[];
 for(let i=0;i<res.length;i++){
