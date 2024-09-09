@@ -2,7 +2,6 @@ import { React, useState } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-console.log(process.env.REACT_APP_Pinata_jwt_secret);
 const UploadNFT = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [nftData, setNftData] = useState({
