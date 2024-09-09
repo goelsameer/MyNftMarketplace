@@ -85,7 +85,7 @@ function Navbar() {
           <div className="hidden md:flex space-x-4">
             <a href="#" className="text-white font-bold px-2">Drops</a>
             <a href="#" className="text-white font-bold px-2">Stats</a>
-            <a href="" className="text-white font-bold px-2" onClick={()=>{navigate('/UploadNFT')}}>Create</a>
+            <a href="" className="text-white font-bold px-2" onClick={()=>{navigate('/AddNewNft')}}>Create</a>
           </div>
         </div>
 

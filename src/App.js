@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import UploadNFT from './Components/UploadNFT';
+import AddNewNft from './Components/AddNewNft';
 import NftCard from './Components/NftCard';
 import RootPage from './Components/RootPage';
 function App() {
@@ -11,7 +11,7 @@ function App() {
          <Routes>
           <Route path="/NftCard" element={<NftCard/>}/>
            <Route path="/" element={<RootPage/>}/>
-           <Route path="/UploadNFT" element={<UploadNFT/>}/>
+           <Route path="/AddNewNft" element={<AddNewNft/>}/>
        </Routes>
        </Router>
     </div>

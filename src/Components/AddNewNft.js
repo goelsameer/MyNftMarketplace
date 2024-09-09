@@ -2,7 +2,7 @@ import { React, useState } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const UploadNFT = () => {
+const AddNewNft = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [nftData, setNftData] = useState({
         image: null,
@@ -226,4 +226,4 @@ const UploadNFT = () => {
     );
 };
 
-export default UploadNFT;
+export default AddNewNft
